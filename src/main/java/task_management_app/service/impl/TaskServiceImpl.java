@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import task_management_app.dto.task.TaskCreateRequestDto;
 import task_management_app.dto.task.TaskResponseDto;
+import task_management_app.dto.task.TaskUpdateRequestDto;
 import task_management_app.exception.EntityNotFoundException;
 import task_management_app.mapper.TaskMapper;
 import task_management_app.model.Task;
@@ -41,5 +42,19 @@ public class TaskServiceImpl implements TaskService {
                 () -> new EntityNotFoundException("Can't find task by id: " + id)
         );
         return taskMapper.toDto(task);
+    }
+
+    @Override
+    public TaskResponseDto update(Long id, TaskUpdateRequestDto requestDto) {
+        Task task = taskRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can't find task by id: " + id)
+        );
+        taskMapper.updateModelFromDto(requestDto, task);
+        return taskMapper.toDto(taskRepository.save(task));
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        taskRepository.deleteById(id);
     }
 }
