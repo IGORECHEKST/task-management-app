@@ -7,6 +7,7 @@
       <list>
         <option value="$PROJECT_DIR$/task-management-app/pom.xml" />
         <option value="$PROJECT_DIR$/.idea/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
   </component>
