@@ -3,6 +3,7 @@ package task_management_app.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,8 +35,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<TaskResponseDto> getAllTasks() {
-        return taskService.findAll();
+    public List<TaskResponseDto> getAllTasks(Pageable pageable) {
+        return taskService.findAll(pageable);
     }
 
     @GetMapping("/{id}")
