@@ -2,6 +2,7 @@ package task_management_app.service.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import task_management_app.dto.task.TaskCreateRequestDto;
 import task_management_app.dto.task.TaskResponseDto;
@@ -28,8 +29,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponseDto> findAll() {
-        return taskRepository.findAll().stream()
+    public List<TaskResponseDto> findAll(Pageable pageable) {
+        return taskRepository.findAll(pageable).stream()
                 .map(taskMapper::toDto)
                 .toList();
     }
