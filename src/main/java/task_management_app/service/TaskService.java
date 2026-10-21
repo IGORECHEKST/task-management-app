@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import task_management_app.dto.task.TaskCreateRequestDto;
 import task_management_app.dto.task.TaskResponseDto;
+import task_management_app.dto.task.TaskUpdateRequestDto;
 import task_management_app.model.User;
 
 public interface TaskService {
@@ -12,4 +13,8 @@ public interface TaskService {
     List<TaskResponseDto> findAll(Pageable pageable);
 
     TaskResponseDto findById(Long id);
+
+    TaskResponseDto update(Long id, TaskUpdateRequestDto requestDto);
+
+    void deleteById(Long id);
 }
