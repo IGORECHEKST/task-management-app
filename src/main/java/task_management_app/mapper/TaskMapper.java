@@ -14,7 +14,11 @@ public interface TaskMapper {
     @Mapping(source = "assignee.id", target = "assigneeId")
     TaskResponseDto toDto(Task task);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "assignee", ignore = true)
     Task toModel(TaskCreateRequestDto requestDto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "assignee", ignore = true)
     void updateModelFromDto(TaskUpdateRequestDto requestDto, @MappingTarget Task task);
 }
