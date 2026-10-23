@@ -11,10 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import java.time.LocalDate;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Table(name = "tasks")
 public class Task {
     @Id
@@ -22,13 +25,20 @@ public class Task {
     private Long id;
 
     @Column(nullable = false)
-    private String title;
+    private String name;
 
     private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private Priority priority;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status status;
+
+    @Column(name = "due_date")
+    private LocalDate dueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_id", nullable = false)
