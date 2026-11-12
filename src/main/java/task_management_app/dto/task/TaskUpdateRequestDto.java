@@ -3,6 +3,7 @@ package task_management_app.dto.task;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Set;
 import lombok.Data;
 import task_management_app.model.Priority;
 import task_management_app.model.Status;
@@ -22,5 +23,10 @@ public class TaskUpdateRequestDto {
 
     private LocalDate dueDate;
 
+    @NotNull
+    private Long projectId;
+
     private Long assigneeId;
+
+    private Set<Long> labelIds;
 }

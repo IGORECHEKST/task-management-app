@@ -10,7 +10,7 @@ import task_management_app.model.User;
 public interface TaskService {
     TaskResponseDto save(User user, TaskCreateRequestDto requestDto);
 
-    List<TaskResponseDto> findAll(Pageable pageable);
+    List<TaskResponseDto> findAll(Long projectId, Pageable pageable);
 
     TaskResponseDto findById(Long id);
 
