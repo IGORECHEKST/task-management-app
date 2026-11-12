@@ -11,3 +11,5 @@ databaseChangeLog:
       file: db/changelog/changes/05-create-labels-table.yaml
   - include:
       file: db/changelog/changes/06-add-project-and-labels-to-tasks.yaml
+  - include:
+      file: db/changelog/changes/07-create-comments-table.yaml
