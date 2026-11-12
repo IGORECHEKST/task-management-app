@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-project-and-labels-to-tasks
+      author: igorechek
+      changes:
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: project_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_tasks_project
+                    references: projects(id)
+        - createTable:
+            tableName: tasks_labels
+            columns:
+              - column:
+                  name: task_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tasks_labels
+                    foreignKeyName: fk_tasks_labels_task
+                    references: tasks(id)
+              - column:
+                  name: label_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tasks_labels
+                    foreignKeyName: fk_tasks_labels_label
+                    references: labels(id)
+
