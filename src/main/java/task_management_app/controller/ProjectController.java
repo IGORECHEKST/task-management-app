@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import task_management_app.dto.project.ProjectCreateRequestDto;
 import task_management_app.dto.project.ProjectResponseDto;
 import task_management_app.dto.project.ProjectUpdateRequestDto;
+import task_management_app.model.Project;
 import task_management_app.service.ProjectService;
 
 @Tag(name = "Project Management", description = "Endpoints for managing projects")
@@ -37,9 +39,16 @@ public class ProjectController {
     }
 
     @GetMapping
-    @Operation(summary = "Retrieve projects", description = "Retrieve a paginated list of projects")
-    public List<ProjectResponseDto> getAllProjects(Pageable pageable) {
-        return projectService.findAll(pageable);
+    @Operation(summary = "Retrieve projects", description = "Retrieve projects with optional status and search filters")
+    public List<ProjectResponseDto> getAllProjects(
+            @RequestParam(required = false) Project.Status status,
+            @RequestParam(required = false) String search,
+            Pageable pageable
+    ) {
+        if (status == null && (search == null || search.isBlank())) {
+            return projectService.findAll(pageable);
+        }
+        return projectService.findAll(status, search, pageable);
     }
 
     @GetMapping("/{id}")
@@ -64,4 +73,3 @@ public class ProjectController {
         projectService.deleteById(id);
     }
 }
-

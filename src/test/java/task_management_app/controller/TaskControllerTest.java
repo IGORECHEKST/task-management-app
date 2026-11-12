@@ -175,6 +175,38 @@ class TaskControllerTest {
     }
 
     @Test
+    @DisplayName("GET /api/tasks with search and filters: returns filtered tasks")
+    void getAllTasks_WithAdvancedFilters_ReturnsFilteredTaskList() throws Exception {
+        when(taskService.findAll(
+                eq(10L),
+                eq(Status.IN_PROGRESS),
+                eq(Priority.HIGH),
+                eq(1L),
+                eq("API"),
+                any(Pageable.class)
+        )).thenReturn(List.of(testResponseDto));
+
+        mockMvc.perform(get("/api/tasks")
+                        .param("projectId", "10")
+                        .param("status", "IN_PROGRESS")
+                        .param("priority", "HIGH")
+                        .param("assigneeId", "1")
+                        .param("search", "API"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Implement API"));
+
+        verify(taskService).findAll(
+                eq(10L),
+                eq(Status.IN_PROGRESS),
+                eq(Priority.HIGH),
+                eq(1L),
+                eq("API"),
+                any(Pageable.class)
+        );
+    }
+
+    @Test
     @DisplayName("GET /api/tasks/{id}: returns task details by ID")
     void getTaskById_ReturnsTask() throws Exception {
         when(taskService.findById(1L)).thenReturn(testResponseDto);
