@@ -48,13 +48,13 @@ The API will be available at `http://localhost:8080`.
 Start PostgreSQL (`docker compose up -d postgres`) and run:
 
 ```bash
-./mvnw spring-boot:run
+mvn spring-boot:run
 ```
 
 ### 4. Run Tests, Checkstyle & Coverage Verification
 
 ```bash
-./mvnw clean verify
+mvn clean verify
 ```
 
 ---

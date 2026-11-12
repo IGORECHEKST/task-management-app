@@ -39,4 +39,14 @@ build/
 !.env.sample
 
 ### Qodana ###
-qodana.yaml
+qodana.yaml
+
+### Maven Wrapper & Git Attributes ###
+.mvn/
+mvnw
+mvnw.cmd
+.gitattributes
+
+### Frontend (hidden during backend mentor review) ###
+frontend/
+
