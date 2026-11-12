@@ -43,6 +43,9 @@ class CommentServiceTest {
     @Mock
     private CommentMapper commentMapper;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private CommentServiceImpl commentService;
 

@@ -16,6 +16,7 @@ import task_management_app.model.User;
 import task_management_app.repository.CommentRepository;
 import task_management_app.repository.TaskRepository;
 import task_management_app.service.CommentService;
+import task_management_app.service.NotificationService;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final TaskRepository taskRepository;
     private final CommentMapper commentMapper;
+    private final NotificationService notificationService;
 
     @Override
     public CommentResponseDto save(User user, CommentCreateRequestDto requestDto) {
@@ -38,6 +40,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setTimestamp(LocalDateTime.now());
 
         Comment savedComment = commentRepository.save(comment);
+        notificationService.notifyNewComment(task.getAssignee(), task, savedComment);
         return commentMapper.toDto(savedComment);
     }
 
@@ -60,4 +63,3 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(id);
     }
 }
-

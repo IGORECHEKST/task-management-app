@@ -57,6 +57,9 @@ class TaskServiceTest {
     @Mock
     private TaskMapper taskMapper;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private TaskServiceImpl taskService;
 
