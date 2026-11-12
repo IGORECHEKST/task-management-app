@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/changes/06-add-project-and-labels-to-tasks.yaml
   - include:
       file: db/changelog/changes/07-create-comments-table.yaml
+  - include:
+      file: db/changelog/changes/08-create-attachments-table.yaml
