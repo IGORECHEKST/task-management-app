@@ -5,3 +5,5 @@ databaseChangeLog:
       file: db/changelog/changes/02-create-tasks-table.yaml
   - include:
       file: db/changelog/changes/03-create-roles-table.yaml
+  - include:
+      file: db/changelog/changes/04-create-projects-table.yaml
