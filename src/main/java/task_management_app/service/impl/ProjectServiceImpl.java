@@ -41,8 +41,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional(readOnly = true)
     public List<ProjectResponseDto> findAll(Project.Status status, String search, Pageable pageable) {
-        String normalizedSearch = (search != null && !search.isBlank()) ? search.trim() : null;
-        if (status == null && normalizedSearch == null) {
+        String normalizedSearch = (search != null && !search.isBlank()) ? search.trim() : "";
+        if (status == null && normalizedSearch.isEmpty()) {
             return findAll(pageable);
         }
         Page<Project> projects = projectRepository.findAllWithFilters(status, normalizedSearch, pageable);

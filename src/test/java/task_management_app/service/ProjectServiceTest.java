@@ -135,6 +135,27 @@ class ProjectServiceTest {
     }
 
     @Test
+    @DisplayName("findAll with status only: normalizes null search to empty string")
+    void findAllWithStatusOnly_NullSearch_PassesEmptyStringToRepository() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Project> projectPage = new PageImpl<>(List.of(project));
+
+        when(projectRepository.findAllWithFilters(Project.Status.INITIATED, "", pageable))
+                .thenReturn(projectPage);
+        when(projectMapper.toDto(project)).thenReturn(projectResponseDto);
+
+        List<ProjectResponseDto> result = projectService.findAll(
+                Project.Status.INITIATED,
+                null,
+                pageable
+        );
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(projectRepository).findAllWithFilters(Project.Status.INITIATED, "", pageable);
+    }
+
+    @Test
     @DisplayName("findById: returns project when found")
     void findById_ExistingId_ReturnsProject() {
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));

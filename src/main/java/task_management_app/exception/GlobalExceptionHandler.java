@@ -2,6 +2,7 @@ package task_management_app.exception;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -59,6 +60,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Object> handleDataIntegrityViolationException(
+            DataIntegrityViolationException ex
+    ) {
+        ErrorResponseDto errorResponse = new ErrorResponseDto(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT,
+                "Database constraint violation: operation conflicts with existing data"
+        );
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(FileStorageException.class)
     public ResponseEntity<Object> handleFileStorageException(FileStorageException ex) {
         ErrorResponseDto errorResponse = new ErrorResponseDto(
@@ -79,4 +93,3 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return e.getDefaultMessage();
     }
 }
-

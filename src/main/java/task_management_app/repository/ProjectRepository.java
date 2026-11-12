@@ -11,7 +11,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     @Query("SELECT p FROM Project p WHERE "
             + "(:status IS NULL OR p.status = :status) AND "
-            + "(:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) "
+            + "(:search = '' OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')) "
             + "OR LOWER(COALESCE(p.description, '')) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Project> findAllWithFilters(
             @Param("status") Project.Status status,

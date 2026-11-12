@@ -238,6 +238,42 @@ class TaskServiceTest {
     }
 
     @Test
+    @DisplayName("findAll with status only: normalizes null search to empty string")
+    void findAllWithStatusOnly_NullSearch_PassesEmptyStringToRepository() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Task> page = new PageImpl<>(List.of(task));
+
+        when(taskRepository.findAllWithFilters(
+                null,
+                Status.IN_PROGRESS,
+                null,
+                null,
+                "",
+                pageable
+        )).thenReturn(page);
+        when(taskMapper.toDto(task)).thenReturn(taskResponseDto);
+
+        List<TaskResponseDto> result = taskService.findAll(
+                null,
+                Status.IN_PROGRESS,
+                null,
+                null,
+                null,
+                pageable
+        );
+
+        assertEquals(1, result.size());
+        verify(taskRepository).findAllWithFilters(
+                null,
+                Status.IN_PROGRESS,
+                null,
+                null,
+                "",
+                pageable
+        );
+    }
+
+    @Test
     @DisplayName("findById: returns task when found")
     void findById_ExistingId_ReturnsTask() {
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));

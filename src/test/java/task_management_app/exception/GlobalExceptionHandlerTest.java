@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -41,6 +42,17 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("handleDataIntegrityViolationException: returns 409 CONFLICT")
+    void handleDataIntegrityViolationException_ReturnsConflict() {
+        DataIntegrityViolationException ex = new DataIntegrityViolationException("Duplicate key");
+
+        ResponseEntity<Object> response = exceptionHandler.handleDataIntegrityViolationException(ex);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+    }
+
+    @Test
     @DisplayName("handleFileStorageException: returns 502 BAD_GATEWAY")
     void handleFileStorageException_ReturnsBadGateway() {
         FileStorageException ex = new FileStorageException("Dropbox unavailable");
@@ -51,4 +63,3 @@ class GlobalExceptionHandlerTest {
         assertEquals(HttpStatus.BAD_GATEWAY, response.getStatusCode());
     }
 }
-

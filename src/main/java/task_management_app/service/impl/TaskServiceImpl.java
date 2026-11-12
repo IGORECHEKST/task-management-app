@@ -86,8 +86,8 @@ public class TaskServiceImpl implements TaskService {
             String search,
             Pageable pageable
     ) {
-        String normalizedSearch = (search != null && !search.isBlank()) ? search.trim() : null;
-        if (status == null && priority == null && assigneeId == null && normalizedSearch == null) {
+        String normalizedSearch = (search != null && !search.isBlank()) ? search.trim() : "";
+        if (status == null && priority == null && assigneeId == null && normalizedSearch.isEmpty()) {
             return findAll(projectId, pageable);
         }
         Page<Task> tasks = taskRepository.findAllWithFilters(

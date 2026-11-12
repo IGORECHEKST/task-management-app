@@ -37,7 +37,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             + "(:status IS NULL OR t.status = :status) AND "
             + "(:priority IS NULL OR t.priority = :priority) AND "
             + "(:assigneeId IS NULL OR t.assignee.id = :assigneeId) AND "
-            + "(:search IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%')) "
+            + "(:search = '' OR LOWER(t.name) LIKE LOWER(CONCAT('%', :search, '%')) "
             + "OR LOWER(COALESCE(t.description, '')) LIKE LOWER(CONCAT('%', :search, '%')))")
     Page<Task> findAllWithFilters(
             @Param("projectId") Long projectId,
