@@ -21,6 +21,7 @@ import task_management_app.repository.LabelRepository;
 import task_management_app.repository.ProjectRepository;
 import task_management_app.repository.TaskRepository;
 import task_management_app.repository.UserRepository;
+import task_management_app.service.NotificationService;
 import task_management_app.service.TaskService;
 
 @Service
@@ -33,6 +34,7 @@ public class TaskServiceImpl implements TaskService {
     private final ProjectRepository projectRepository;
     private final LabelRepository labelRepository;
     private final TaskMapper taskMapper;
+    private final NotificationService notificationService;
 
     @Override
     public TaskResponseDto save(User user, TaskCreateRequestDto requestDto) {
@@ -57,6 +59,7 @@ public class TaskServiceImpl implements TaskService {
         }
 
         Task savedTask = taskRepository.save(task);
+        notificationService.notifyTaskAssigned(savedTask.getAssignee(), savedTask);
         return taskMapper.toDto(savedTask);
     }
 
@@ -103,7 +106,11 @@ public class TaskServiceImpl implements TaskService {
             task.setLabels(resolveLabels(requestDto.getLabelIds()));
         }
 
-        return taskMapper.toDto(taskRepository.save(task));
+        Task savedTask = taskRepository.save(task);
+        if (savedTask.getAssignee() != null) {
+            notificationService.notifyTaskAssigned(savedTask.getAssignee(), savedTask);
+        }
+        return taskMapper.toDto(savedTask);
     }
 
     @Override
