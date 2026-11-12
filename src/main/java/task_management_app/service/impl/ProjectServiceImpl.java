@@ -2,6 +2,7 @@ package task_management_app.service.impl;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,19 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional(readOnly = true)
+    public List<ProjectResponseDto> findAll(Project.Status status, String search, Pageable pageable) {
+        String normalizedSearch = (search != null && !search.isBlank()) ? search.trim() : null;
+        if (status == null && normalizedSearch == null) {
+            return findAll(pageable);
+        }
+        Page<Project> projects = projectRepository.findAllWithFilters(status, normalizedSearch, pageable);
+        return projects.stream()
+                .map(projectMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public ProjectResponseDto findById(Long id) {
         Project project = projectRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Can't find project by id: " + id)
@@ -63,4 +77,3 @@ public class ProjectServiceImpl implements ProjectService {
         projectRepository.deleteById(id);
     }
 }
-

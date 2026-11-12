@@ -201,6 +201,43 @@ class TaskServiceTest {
     }
 
     @Test
+    @DisplayName("findAll with filters: returns tasks matching status, priority, assigneeId and search")
+    void findAllWithFilters_ValidFilters_ReturnsMatchingTasks() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Task> page = new PageImpl<>(List.of(task));
+
+        when(taskRepository.findAllWithFilters(
+                10L,
+                Status.IN_PROGRESS,
+                Priority.HIGH,
+                1L,
+                "API",
+                pageable
+        )).thenReturn(page);
+        when(taskMapper.toDto(task)).thenReturn(taskResponseDto);
+
+        List<TaskResponseDto> result = taskService.findAll(
+                10L,
+                Status.IN_PROGRESS,
+                Priority.HIGH,
+                1L,
+                "API",
+                pageable
+        );
+
+        assertEquals(1, result.size());
+        assertEquals("Implement API", result.get(0).getName());
+        verify(taskRepository).findAllWithFilters(
+                10L,
+                Status.IN_PROGRESS,
+                Priority.HIGH,
+                1L,
+                "API",
+                pageable
+        );
+    }
+
+    @Test
     @DisplayName("findById: returns task when found")
     void findById_ExistingId_ReturnsTask() {
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));

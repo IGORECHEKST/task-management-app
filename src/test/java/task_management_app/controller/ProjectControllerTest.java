@@ -116,6 +116,29 @@ class ProjectControllerTest {
     }
 
     @Test
+    @DisplayName("GET /api/projects?status=INITIATED&search=Test: returns filtered list of projects")
+    void getAllProjects_WithFilters_ReturnsFilteredProjectList() throws Exception {
+        when(projectService.findAll(
+                eq(Project.Status.INITIATED),
+                eq("Test"),
+                any(Pageable.class)
+        )).thenReturn(List.of(testResponseDto));
+
+        mockMvc.perform(get("/api/projects")
+                        .param("status", "INITIATED")
+                        .param("search", "Test"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1L))
+                .andExpect(jsonPath("$[0].name").value("Test Project"));
+
+        verify(projectService).findAll(
+                eq(Project.Status.INITIATED),
+                eq("Test"),
+                any(Pageable.class)
+        );
+    }
+
+    @Test
     @DisplayName("GET /api/projects/{id}: returns project details by ID")
     void getProjectById_ReturnsProject() throws Exception {
         when(projectService.findById(1L)).thenReturn(testResponseDto);

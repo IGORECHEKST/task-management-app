@@ -14,7 +14,9 @@ import task_management_app.dto.task.TaskUpdateRequestDto;
 import task_management_app.exception.EntityNotFoundException;
 import task_management_app.mapper.TaskMapper;
 import task_management_app.model.Label;
+import task_management_app.model.Priority;
 import task_management_app.model.Project;
+import task_management_app.model.Status;
 import task_management_app.model.Task;
 import task_management_app.model.User;
 import task_management_app.repository.LabelRepository;
@@ -69,6 +71,33 @@ public class TaskServiceImpl implements TaskService {
         Page<Task> tasks = projectId != null
                 ? taskRepository.findAllByProjectId(projectId, pageable)
                 : taskRepository.findAll(pageable);
+        return tasks.stream()
+                .map(taskMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<TaskResponseDto> findAll(
+            Long projectId,
+            Status status,
+            Priority priority,
+            Long assigneeId,
+            String search,
+            Pageable pageable
+    ) {
+        String normalizedSearch = (search != null && !search.isBlank()) ? search.trim() : null;
+        if (status == null && priority == null && assigneeId == null && normalizedSearch == null) {
+            return findAll(projectId, pageable);
+        }
+        Page<Task> tasks = taskRepository.findAllWithFilters(
+                projectId,
+                status,
+                priority,
+                assigneeId,
+                normalizedSearch,
+                pageable
+        );
         return tasks.stream()
                 .map(taskMapper::toDto)
                 .toList();

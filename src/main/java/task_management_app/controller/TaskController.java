@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import task_management_app.dto.task.TaskCreateRequestDto;
 import task_management_app.dto.task.TaskResponseDto;
 import task_management_app.dto.task.TaskUpdateRequestDto;
+import task_management_app.model.Priority;
+import task_management_app.model.Status;
 import task_management_app.model.User;
 import task_management_app.service.TaskService;
 
@@ -43,12 +45,20 @@ public class TaskController {
     }
 
     @GetMapping
-    @Operation(summary = "Retrieve tasks", description = "Retrieve tasks, optionally filtered by projectId")
+    @Operation(summary = "Retrieve tasks", description = "Retrieve tasks with optional search and filters")
     public List<TaskResponseDto> getAllTasks(
             @RequestParam(required = false) Long projectId,
+            @RequestParam(required = false) Status status,
+            @RequestParam(required = false) Priority priority,
+            @RequestParam(required = false) Long assigneeId,
+            @RequestParam(required = false) String search,
             Pageable pageable
     ) {
-        return taskService.findAll(projectId, pageable);
+        if (status == null && priority == null && assigneeId == null
+                && (search == null || search.isBlank())) {
+            return taskService.findAll(projectId, pageable);
+        }
+        return taskService.findAll(projectId, status, priority, assigneeId, search, pageable);
     }
 
     @GetMapping("/{id}")

@@ -113,6 +113,28 @@ class ProjectServiceTest {
     }
 
     @Test
+    @DisplayName("findAll with filters: returns projects filtered by status and search")
+    void findAllWithFilters_StatusAndSearch_ReturnsFilteredProjects() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<Project> projectPage = new PageImpl<>(List.of(project));
+
+        when(projectRepository.findAllWithFilters(Project.Status.INITIATED, "Test", pageable))
+                .thenReturn(projectPage);
+        when(projectMapper.toDto(project)).thenReturn(projectResponseDto);
+
+        List<ProjectResponseDto> result = projectService.findAll(
+                Project.Status.INITIATED,
+                "Test",
+                pageable
+        );
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals("Test Project", result.get(0).getName());
+        verify(projectRepository).findAllWithFilters(Project.Status.INITIATED, "Test", pageable);
+    }
+
+    @Test
     @DisplayName("findById: returns project when found")
     void findById_ExistingId_ReturnsProject() {
         when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
